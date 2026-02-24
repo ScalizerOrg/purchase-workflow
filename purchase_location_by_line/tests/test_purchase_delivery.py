@@ -31,8 +31,7 @@ class TestDeliverySingle(PurchaseTestCommon):
         )
 
         # Locations
-        cls.warehouse = cls.env.ref('stock.warehouse0')
-        cls.l1 = cls.warehouse.lot_stock_id
+        cls.l1 = cls.warehouse_1.lot_stock_id
         cls.l2 = cls.env["stock.location"].create(
             {
                 "location_id": cls.l1.id,
