@@ -55,11 +55,6 @@ class TestDeliverySingle(PurchaseTestCommon):
         cls.date_sooner = "2015-01-01"
         cls.date_later = "2015-12-13"
         cls.date_3rd = "2015-12-31"
-        cls.partner_1 = cls.env["res.partner"].create(
-            {
-                "name": "Test Supplier 1",
-            }
-        )
         cls.po = cls.env["purchase.order"].create(
             {
                 "partner_id": cls.partner_1.id,
