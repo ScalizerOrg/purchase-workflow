@@ -11,8 +11,8 @@ class TestDeliverySingle(PurchaseTestCommon):
     def setUp(self):
         super().setUp()
         # Products
-
-        p1 = cls.product_model.create(
+        self.product_model = self.env["product.product"]
+        p1 = self.product_model.create(
             {
                 "name": "Test Product 1",
                 "type": "consu",
@@ -21,7 +21,7 @@ class TestDeliverySingle(PurchaseTestCommon):
                 "standard_price": 10,
             }
         )
-        p2 = cls.product_model.create(
+        p2 = self.product_model.create(
             {
                 "name": "Test Product 2",
                 "is_storable": True,
