@@ -42,9 +42,14 @@ class TestDeliverySingle(PurchaseTestCommon):
         # 2 dates we can use to test the features
         cls.date_sooner = time.strftime("%Y") + "-01-01"
         cls.date_later = time.strftime("%Y") + "-12-31"
+        partner_1 = cls.env["res.partner"].create(
+            {
+                "name": "Test Supplier 1",
+            }
+        )
         cls.po = cls.env["purchase.order"].create(
             {
-                "partner_id": cls.partner_1.id,
+                "partner_id": partner_1.id,
                 "order_line": [
                     (
                         0,
