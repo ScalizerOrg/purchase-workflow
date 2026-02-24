@@ -30,13 +30,15 @@ class TestDeliverySingle(PurchaseTestCommon):
             }
         )
         # Warehouse
-        cls.warehouse_1 = cls.env['stock.warehouse'].create({
-            'name': 'Base Warehouse TEST',
-            'reception_steps': 'one_step',
-            'delivery_steps': 'ship_only',
-            'code': 'BWH-TEST',
-            'sequence': 5,
-        })
+        cls.warehouse_1 = cls.env['stock.warehouse'].create(
+            {
+                'name': 'Base Warehouse TEST',
+                'reception_steps': 'one_step',
+                'delivery_steps': 'ship_only',
+                'code': 'BWH-TEST',
+                'sequence': 5,
+            }
+        )
         # Locations
         cls.l1 = cls.warehouse_1.lot_stock_id
         cls.l2 = cls.env["stock.location"].create(
@@ -256,7 +258,7 @@ class TestDeliverySingle(PurchaseTestCommon):
         )
         default_location_picking = self.po.picking_ids.filtered(
             lambda p: p.location_dest_id
-                      == self.po.picking_type_id.default_location_dest_id
+            == self.po.picking_type_id.default_location_dest_id
         )
         self.assertGreaterEqual(
             len(default_location_picking),
