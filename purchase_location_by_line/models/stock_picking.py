@@ -21,10 +21,12 @@ class StockPicking(models.Model):
                 break
 
         if location_dest_id:
-            domain = Domain.AND([
+            domain = Domain.AND(
+                [
                     domain,
                     [("location_dest_id", "=", location_dest_id)],
-            ])
+                ]
+            )
             return list(domain)
 
         return domain
