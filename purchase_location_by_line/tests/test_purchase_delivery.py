@@ -4,15 +4,15 @@
 
 import time
 
-from odoo.addons.base.tests.common import BaseCommon
+from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 
 
-class TestDeliverySingle(BaseCommon):
+class TestDeliverySingle(PurchaseTestCommon):
     def setUp(self):
         super().setUp()
         # Products
 
-        p1 = cls.product1 = cls.product_model.create(
+        p1 = cls.product_model.create(
             {
                 "name": "Test Product 1",
                 "type": "consu",
@@ -21,7 +21,7 @@ class TestDeliverySingle(BaseCommon):
                 "standard_price": 10,
             }
         )
-        p2 = cls.product2 = cls.product_model.create(
+        p2 = cls.product_model.create(
             {
                 "name": "Test Product 2",
                 "is_storable": True,
@@ -36,11 +36,9 @@ class TestDeliverySingle(BaseCommon):
         self.l2 = self.env["stock.location"].create(
             {"location_id": self.l1.id, "name": "Shelf 1", "usage": "internal"}
         )
-
         # 2 dates we can use to test the features
         self.date_sooner = time.strftime("%Y") + "-01-01"
         self.date_later = time.strftime("%Y") + "-12-31"
-
 
         self.po = self.env["purchase.order"].create(
             {
@@ -244,7 +242,7 @@ class TestDeliverySingle(BaseCommon):
         )
         default_location_picking = self.po.picking_ids.filtered(
             lambda p: p.location_dest_id
-            == self.po.picking_type_id.default_location_dest_id
+                      == self.po.picking_type_id.default_location_dest_id
         )
         self.assertGreaterEqual(
             len(default_location_picking),
