@@ -1,6 +1,10 @@
 # © 2026 Scalizer (<https://www.scalizer.fr>)
+import logging
+
 from odoo import api, models
 from odoo.fields import Domain
+
+_logger = logging.getLogger(__name__)
 
 
 class StockPicking(models.Model):
@@ -9,7 +13,6 @@ class StockPicking(models.Model):
     @api.model
     def _purchase_split_date_assign_domain(self, key, tz):
         domain = super()._purchase_split_date_assign_domain(key, tz)
-
         location_dest_id = False
         for key_element in key:
             if (
@@ -28,5 +31,4 @@ class StockPicking(models.Model):
                 ]
             )
             return list(domain)
-
         return domain

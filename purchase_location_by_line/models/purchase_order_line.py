@@ -34,9 +34,18 @@ class PurchaseOrderLine(models.Model):
         return keys + (self.location_dest_id.id,)
 
     def _prepare_stock_moves(self, picking):
+        if (
+            picking
+            and self.location_dest_id
+            and not picking.move_ids
+            and picking.location_dest_id != self.location_dest_id
+        ):
+            picking.location_dest_id = self.location_dest_id
+
         res = super()._prepare_stock_moves(picking)
 
         if self.location_dest_id:
-            for re in res:
-                re["location_dest_id"] = self.location_dest_id.id
+            for vals in res:
+                vals["location_final_id"] = self.location_dest_id.id
+                vals["location_dest_id"] = self.location_dest_id.id
         return res

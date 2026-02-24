@@ -1,7 +1,11 @@
 # © 2026 Scalizer (<https://www.scalizer.fr>)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
+import logging
+
 from odoo import models
+
+_logger = logging.getLogger(__name__)
 
 
 class StockMove(models.Model):
@@ -9,4 +13,4 @@ class StockMove(models.Model):
 
     def _purchase_split_date_get_group_keys(self):
         key = super()._purchase_split_date_get_group_keys()
-        return key + ({"location_dest_id": self.location_dest_id.id},)
+        return key + (("location_dest_id", self.location_dest_id.id),)

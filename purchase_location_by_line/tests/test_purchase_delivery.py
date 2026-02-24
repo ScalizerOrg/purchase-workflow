@@ -6,25 +6,26 @@ import time
 
 from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 
+import logging
+_logger = logging.getLogger(__name__)
 
 class TestDeliverySingle(PurchaseTestCommon):
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # Products
-        self.product_model = self.env["product.product"]
-        p1 = self.product_model.create(
+        cls.product_model = cls.env["product.product"]
+        p1 = cls.product_model.create(
             {
                 "name": "Test Product 1",
                 "type": "consu",
-                "is_storable": True,
                 "default_code": "PROD1",
                 "standard_price": 10,
             }
         )
-        p2 = self.product_model.create(
+        p2 = cls.product_model.create(
             {
                 "name": "Test Product 2",
-                "is_storable": True,
                 "type": "consu",
                 "default_code": "PROD2",
                 "standard_price": 10,
@@ -32,29 +33,28 @@ class TestDeliverySingle(PurchaseTestCommon):
         )
 
         # Locations
-        self.l1 = self.env.ref("stock.stock_location_stock")
-        self.l2 = self.env["stock.location"].create(
-            {"location_id": self.l1.id, "name": "Shelf 1", "usage": "internal"}
+        cls.l1 = cls.env.ref("stock.stock_location_stock")
+        cls.l2 = cls.env["stock.location"].create(
+            {"location_id": cls.l1.id, "name": "Shelf 1", "usage": "internal"}
         )
         # 2 dates we can use to test the features
-        self.date_sooner = time.strftime("%Y") + "-01-01"
-        self.date_later = time.strftime("%Y") + "-12-31"
-
-        self.po = self.env["purchase.order"].create(
+        cls.date_sooner = time.strftime("%Y") + "-01-01"
+        cls.date_later = time.strftime("%Y") + "-12-31"
+        cls.po = cls.env["purchase.order"].create(
             {
-                "partner_id": self.partner_1.id,
+                "partner_id": cls.partner_1.id,
                 "order_line": [
                     (
                         0,
                         0,
                         {
                             "product_id": p1.id,
-                            "product_uom": p1.uom_id.id,
+                            "product_uom_id": p1.uom_id.id,
                             "name": p1.name,
                             "price_unit": p1.standard_price,
-                            "date_planned": self.date_sooner,
+                            "date_planned": cls.date_sooner,
                             "product_qty": 42.0,
-                            "location_dest_id": self.l1.id,
+                            "location_dest_id": cls.l1.id,
                         },
                     ),
                     (
@@ -62,12 +62,12 @@ class TestDeliverySingle(PurchaseTestCommon):
                         0,
                         {
                             "product_id": p2.id,
-                            "product_uom": p1.uom_id.id,
+                            "product_uom_id": p1.uom_id.id,
                             "name": p2.name,
                             "price_unit": p2.standard_price,
-                            "date_planned": self.date_sooner,
+                            "date_planned": cls.date_sooner,
                             "product_qty": 12.0,
-                            "location_dest_id": self.l1.id,
+                            "location_dest_id": cls.l1.id,
                         },
                     ),
                     (
@@ -75,12 +75,12 @@ class TestDeliverySingle(PurchaseTestCommon):
                         0,
                         {
                             "product_id": p1.id,
-                            "product_uom": p1.uom_id.id,
+                            "product_uom_id": p1.uom_id.id,
                             "name": p1.name,
                             "price_unit": p1.standard_price,
-                            "date_planned": self.date_sooner,
+                            "date_planned": cls.date_sooner,
                             "product_qty": 1.0,
-                            "location_dest_id": self.l1.id,
+                            "location_dest_id": cls.l1.id,
                         },
                     ),
                 ],
@@ -183,7 +183,7 @@ class TestDeliverySingle(PurchaseTestCommon):
 
     def test_check_multiple_locations_multiple_dates(self):
         # Change the location of the first line and date of the second line
-        self.po.order_line[0].location_dest_id = self.l2
+        self.po.order_line[0].write({"location_dest_id": self.l2.id})
         self.po.order_line[1].date_planned = self.date_later
 
         self.assertEqual(
@@ -191,7 +191,6 @@ class TestDeliverySingle(PurchaseTestCommon):
             0,
             "There must not be pickings for the PO when draft",
         )
-
         self.po.button_confirm()
 
         l2_picking = self.po.picking_ids.filtered(
