@@ -30,13 +30,13 @@ class TestDeliverySingle(PurchaseTestCommon):
             }
         )
         # Warehouse
-        cls.warehouse_1 = cls.env['stock.warehouse'].create(
+        cls.warehouse_1 = cls.env["stock.warehouse"].create(
             {
-                'name': 'Base Warehouse TEST',
-                'reception_steps': 'one_step',
-                'delivery_steps': 'ship_only',
-                'code': 'BWH-TEST',
-                'sequence': 5,
+                "name": "Base Warehouse TEST",
+                "reception_steps": "one_step",
+                "delivery_steps": "ship_only",
+                "code": "BWH-TEST",
+                "sequence": 5,
             }
         )
         # Locations
