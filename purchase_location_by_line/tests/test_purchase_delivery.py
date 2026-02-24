@@ -11,8 +11,25 @@ class TestDeliverySingle(BaseCommon):
     def setUp(self):
         super().setUp()
         # Products
-        p1 = self.env.ref("product.product_product_13")
-        p2 = self.env.ref("product.product_product_25")
+
+        p1 = cls.product1 = cls.product_model.create(
+            {
+                "name": "Test Product 1",
+                "type": "consu",
+                "is_storable": True,
+                "default_code": "PROD1",
+                "standard_price": 10,
+            }
+        )
+        p2 = cls.product2 = cls.product_model.create(
+            {
+                "name": "Test Product 2",
+                "is_storable": True,
+                "type": "consu",
+                "default_code": "PROD2",
+                "standard_price": 10,
+            }
+        )
 
         # Locations
         self.l1 = self.env.ref("stock.stock_location_stock")
@@ -24,9 +41,10 @@ class TestDeliverySingle(BaseCommon):
         self.date_sooner = time.strftime("%Y") + "-01-01"
         self.date_later = time.strftime("%Y") + "-12-31"
 
+
         self.po = self.env["purchase.order"].create(
             {
-                "partner_id": self.ref("base.res_partner_3"),
+                "partner_id": self.partner_1.id,
                 "order_line": [
                     (
                         0,
