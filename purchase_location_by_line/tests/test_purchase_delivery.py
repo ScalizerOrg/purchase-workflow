@@ -6,8 +6,6 @@ import time
 
 from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 
-import logging
-_logger = logging.getLogger(__name__)
 
 class TestDeliverySingle(PurchaseTestCommon):
     @classmethod
@@ -35,9 +33,12 @@ class TestDeliverySingle(PurchaseTestCommon):
         # Locations
         cls.l1 = cls.warehouse.lot_stock_id
         cls.l2 = cls.env["stock.location"].create(
-            {"location_id": cls.l1.id, "name": "Shelf 1", "usage": "internal",
-             "company_id": cls.l1.company_id.id,
-             }
+            {
+                "location_id": cls.l1.id,
+                "name": "Shelf 1",
+                "usage": "internal",
+                "company_id": cls.l1.company_id.id,
+            }
         )
         # 2 dates we can use to test the features
         cls.date_sooner = time.strftime("%Y") + "-01-01"
