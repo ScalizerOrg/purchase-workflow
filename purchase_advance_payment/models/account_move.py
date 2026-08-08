@@ -13,7 +13,10 @@ class AccountMove(models.Model):
         for move in self:
             # Link advance payments without move_id to the new bill.
             purchase_order = move.line_ids.purchase_order_id
-            move.matched_payment_ids = purchase_order.account_payment_ids.filtered(
+            # Union, not replace: a plain assignment would wipe out any
+            # payment already matched to this move every time it is posted
+            # again (e.g. reset to draft then reconfirmed).
+            move.matched_payment_ids |= purchase_order.account_payment_ids.filtered(
                 lambda p: not p.outstanding_account_id
                 and not p.move_id
                 and not p.invoice_ids
